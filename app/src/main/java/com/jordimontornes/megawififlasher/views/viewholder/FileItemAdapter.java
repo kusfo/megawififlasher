@@ -1,56 +1,45 @@
 package com.jordimontornes.megawififlasher.views.viewholder;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.jordimontornes.megawififlasher.R;
+import com.jordimontornes.megawififlasher.views.ui.FileManagerPresenter;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jordimontornes on 21/04/2017.
  */
 
-public class FileItemAdapter  extends RecyclerView.Adapter<FileItemAdapter.FileItemViewHolder>{
+public class FileItemAdapter  extends RecyclerView.Adapter<FileItemViewHolder> {
 
-    private FileItemData[] fileItemDataArray;
+    private final FileManagerPresenter fileManagerPresenter;
+    private List<FileItemData> fileItemDataArray;
 
-    public FileItemAdapter(FileItemData[] fileItemDataArray) {
-        this.fileItemDataArray = fileItemDataArray;
+    public FileItemAdapter(FileManagerPresenter fileManagerPresenter) {
+        this.fileItemDataArray = new ArrayList<>();
+        this.fileManagerPresenter = fileManagerPresenter;
     }
 
     @Override
     public FileItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View fileItemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.file_item_layout, null);
-
-        return new FileItemViewHolder(fileItemLayoutView);
+        return new FileItemViewHolder(fileItemLayoutView, fileManagerPresenter);
     }
 
     @Override
     public void onBindViewHolder(FileItemViewHolder viewHolder, int position) {
-        viewHolder.fileName.setText(fileItemDataArray[position].getName());
-        viewHolder.fileIcon.setImageResource(fileItemDataArray[position].isDirectory() ? R.drawable.ic_folder_black_24dp : R.drawable.ic_file_black_24dp);
+        FileItemData fileItemData = fileItemDataArray.get(position);
+        viewHolder.render(fileItemData);
     }
 
     @Override
     public int getItemCount() {
-        return fileItemDataArray.length;
-    }
-
-    public static class FileItemViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.file_name) TextView fileName;
-        @BindView(R.id.file_icon) ImageView fileIcon;
-
-        public FileItemViewHolder(View itemLayoutView) {
-            super(itemLayoutView);
-            ButterKnife.bind(this, itemLayoutView);
-        }
-
+        return fileItemDataArray.size();
     }
 }

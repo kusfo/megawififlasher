@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.jordimontornes.megawififlasher.R;
 import com.jordimontornes.megawififlasher.domain.DirectoryContentProvider;
@@ -26,12 +27,13 @@ public class FileManagerFragment extends Fragment {
     RecyclerView fileRecyclerView;
     FileItemAdapter fileItemAdapter;
     RecyclerView.LayoutManager layoutManager;
-    FileItemData[] fileItemDataArray;
     DirectoryContentProvider directoryContentProvider;
+    FileManagerPresenter presenter;
 
     public FileManagerFragment() {
         // Required empty public constructor
         directoryContentProvider = new DirectoryContentProvider();
+        presenter = new FileManagerPresenter();
     }
 
 
@@ -42,7 +44,7 @@ public class FileManagerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initDataSet2();
+        initDataSet();
         int externalStoragePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
         if(externalStoragePermission == PackageManager.PERMISSION_GRANTED) {
             retrieveDirectoryContents();
@@ -53,7 +55,7 @@ public class FileManagerFragment extends Fragment {
 
     }
 
-    private void initDataSet2() {
+    private void initDataSet() {
         fileItemDataArray = new FileItemData[1];
         fileItemDataArray[0] = new FileItemData("Empty List", false);
     }
@@ -68,7 +70,7 @@ public class FileManagerFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_file_manager, container, false);
 
         fileRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        fileItemAdapter = new FileItemAdapter(fileItemDataArray);
+        fileItemAdapter = new FileItemAdapter(presenter);
         layoutManager = new LinearLayoutManager(getActivity());
 
         fileRecyclerView.setLayoutManager(layoutManager);
@@ -101,10 +103,8 @@ public class FileManagerFragment extends Fragment {
             case PERMISSION_REQUEST_READ_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-
+                    retrieveDirectoryContents();
+                    fileItemAdapter.notifyDataSetChanged();
                 }
                 return;
             }
