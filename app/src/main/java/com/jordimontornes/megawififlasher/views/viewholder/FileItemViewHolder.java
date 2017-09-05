@@ -31,7 +31,15 @@ public class FileItemViewHolder extends RecyclerView.ViewHolder {
     public void render(FileItemData fileItemData) {
         attachListeners(fileItemData);
         fileName.setText(fileItemData.getName());
-        fileIcon.setImageResource(fileItemData.isDirectory() ? R.drawable.ic_folder_black_24dp : R.drawable.ic_file_black_24dp);
+        if(fileItemData.isDirectory()) {
+            fileIcon.setImageResource(R.drawable.ic_folder_black_24dp);
+        } else {
+            if(fileItemData.isSegaRom()) {
+                fileIcon.setImageResource(R.drawable.ic_folder_sega_24dp);
+            } else {
+                fileIcon.setImageResource(R.drawable.ic_file_black_24dp);
+            }
+        }
     }
 
     private void attachListeners(final FileItemData fileItemData) {

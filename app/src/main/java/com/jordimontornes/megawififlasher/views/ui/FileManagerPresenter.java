@@ -1,7 +1,5 @@
 package com.jordimontornes.megawififlasher.views.ui;
 
-import android.util.Log;
-
 import com.jordimontornes.megawififlasher.domain.DirectoryContentProvider;
 import com.jordimontornes.megawififlasher.views.viewholder.FileItemData;
 
@@ -25,20 +23,22 @@ public class FileManagerPresenter {
     public void detachView() {
         fileManagerListener = null;
     }
+
     public void itemClick(FileItemData fileItemData) {
         String fullPath = fileItemData.getFullPath();
-        if(fileItemData.isDirectory()) {
-            directoryContentProvider.updateCurrentDir(fullPath);
-            if(fileManagerListener != null) {
+        if (fileManagerListener != null) {
+            if (fileItemData.isDirectory()) {
+                directoryContentProvider.updateCurrentDir(fullPath);
+
                 fileManagerListener.onClickDirectory();
-            }
-        } else {
-            Log.d("Presenter","This is a file: " + fullPath);
-            if(fileManagerListener != null) {
-                fileManagerListener.onClickFile();
+            } else {
+                if(fileItemData.isSegaRom()) {
+                    fileManagerListener.onClickSegaFile();
+                } else {
+                    fileManagerListener.onClickCommonFile();
+                }
             }
         }
-
     }
 
     public FileItemData[] retrieveDirectoryContents() {

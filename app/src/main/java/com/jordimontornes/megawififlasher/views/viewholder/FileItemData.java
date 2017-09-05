@@ -42,4 +42,12 @@ public class FileItemData {
     public String getFullPath() {
         return path + "/" + name;
     }
+
+    public boolean isSegaRom() {
+        if(name.contains(".bin")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

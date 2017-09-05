@@ -105,8 +105,13 @@ public class FileManagerFragment extends Fragment  implements FileManagerListene
     }
 
     @Override
-    public void onClickFile() {
-        Toast.makeText(getContext(),"File clicked",Toast.LENGTH_LONG).show();
+    public void onClickCommonFile() {
+        Toast.makeText(getContext(),"File is not a Sega Genesis/Megadrive Rom!",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onClickSegaFile() {
+        Toast.makeText(getContext(),"File is a Sega Genesis/Megadrive Rom!",Toast.LENGTH_LONG).show();
     }
 
     @Override
