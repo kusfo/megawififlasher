@@ -18,10 +18,15 @@ public class DirectoryContentProvider {
 
     public FileItemData[] getContents() {
         File[] files = currentDir.listFiles();
-        FileItemData[] fileItemDataArray = new FileItemData[files.length];
-        for(int i = 0; i < files.length; i++) {
-            fileItemDataArray[i] = new FileItemData(files[i].getName(), files[i].isDirectory());
+        FileItemData[] fileItemDataArray = new FileItemData[files.length + 1];
+        fileItemDataArray[0] = new FileItemData("..", currentDir.getAbsolutePath(),true);
+        for(int i = 1; i <= files.length; i++) {
+            fileItemDataArray[i] = new FileItemData(files[i - 1].getName(), currentDir.getAbsolutePath(),files[i - 1].isDirectory());
         }
         return fileItemDataArray;
+    }
+
+    public void updateCurrentDir(String currentDirPath) {
+        this.currentDir = new File(currentDirPath);
     }
 }

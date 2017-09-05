@@ -1,7 +1,6 @@
 package com.jordimontornes.megawififlasher.views.viewholder;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,5 +40,9 @@ public class FileItemAdapter  extends RecyclerView.Adapter<FileItemViewHolder> {
     @Override
     public int getItemCount() {
         return fileItemDataArray.size();
+    }
+
+    public void setFileItemDataArray(List<FileItemData> fileItemDataArray) {
+        this.fileItemDataArray = fileItemDataArray;
     }
 }

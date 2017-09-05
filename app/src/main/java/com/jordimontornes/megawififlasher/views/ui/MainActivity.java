@@ -1,6 +1,5 @@
 package com.jordimontornes.megawififlasher.views.ui;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,7 +11,7 @@ import android.view.MenuItem;
 
 import com.jordimontornes.megawififlasher.R;
 
-public class MainActivity extends AppCompatActivity implements FileManagerFragment.OnFileManagerFragmentInteractionListener, SettingsFragment.OnSettingsFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView navigationBottomBar;
 
@@ -76,16 +75,6 @@ public class MainActivity extends AppCompatActivity implements FileManagerFragme
         if (actionBar != null) {
             actionBar.setTitle(text);
         }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        //NOP
-    }
-
-    @Override
-    public void onFragmentInteraction2(Uri uri) {
-        //NOP
     }
 
 }

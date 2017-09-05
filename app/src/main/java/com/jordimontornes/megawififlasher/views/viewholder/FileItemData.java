@@ -6,10 +6,12 @@ package com.jordimontornes.megawififlasher.views.viewholder;
 
 public class FileItemData {
     private String name;
+    private String path;
     private boolean directory;
 
-    public FileItemData(String name, boolean directory) {
+    public FileItemData(String name, String path, boolean directory) {
         this.name = name;
+        this.path = path;
         this.directory = directory;
     }
 
@@ -21,11 +23,23 @@ public class FileItemData {
         this.name = name;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public boolean isDirectory() {
         return directory;
     }
 
     public void setDirectory(boolean directory) {
         this.directory = directory;
+    }
+
+    public String getFullPath() {
+        return path + "/" + name;
     }
 }

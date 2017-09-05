@@ -37,7 +37,7 @@ public class FileItemViewHolder extends RecyclerView.ViewHolder {
     private void attachListeners(final FileItemData fileItemData) {
         itemView.setOnClickListener( new View.OnClickListener() {
             @Override public void onClick(View v) {
-                fileManagerPresenter.click(fileItemData);
+                fileManagerPresenter.itemClick(fileItemData);
             }
         });
     }

@@ -1,9 +1,7 @@
 package com.jordimontornes.megawififlasher.views.ui;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,21 +17,20 @@ import com.jordimontornes.megawififlasher.domain.DirectoryContentProvider;
 import com.jordimontornes.megawififlasher.views.viewholder.FileItemAdapter;
 import com.jordimontornes.megawififlasher.views.viewholder.FileItemData;
 
-public class FileManagerFragment extends Fragment {
+import java.util.Arrays;
+
+public class FileManagerFragment extends Fragment  implements FileManagerListener {
 
     private static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    private OnFileManagerFragmentInteractionListener fileManagerFragmentListener;
 
     RecyclerView fileRecyclerView;
     FileItemAdapter fileItemAdapter;
     RecyclerView.LayoutManager layoutManager;
-    DirectoryContentProvider directoryContentProvider;
     FileManagerPresenter presenter;
+    private FileItemData[] fileItemDataArray;
 
     public FileManagerFragment() {
-        // Required empty public constructor
-        directoryContentProvider = new DirectoryContentProvider();
-        presenter = new FileManagerPresenter();
+        presenter = new FileManagerPresenter(new DirectoryContentProvider());
     }
 
 
@@ -45,23 +42,28 @@ public class FileManagerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initDataSet();
-        int externalStoragePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
-        if(externalStoragePermission == PackageManager.PERMISSION_GRANTED) {
-            retrieveDirectoryContents();
-        } else  {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
-        }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.attachView(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.detachView();
     }
 
     private void initDataSet() {
         fileItemDataArray = new FileItemData[1];
-        fileItemDataArray[0] = new FileItemData("Empty List", false);
+        fileItemDataArray[0] = new FileItemData("Empty List", "/" ,false);
     }
 
-    private void retrieveDirectoryContents() {
-        fileItemDataArray = directoryContentProvider.getContents();
+    private void updateDirectoryContents() {
+        fileItemDataArray = presenter.retrieveDirectoryContents();
+        fileItemAdapter.setFileItemDataArray(Arrays.asList(fileItemDataArray));
     }
 
     @Override
@@ -75,25 +77,16 @@ public class FileManagerFragment extends Fragment {
 
         fileRecyclerView.setLayoutManager(layoutManager);
         fileRecyclerView.setAdapter(fileItemAdapter);
-        return rootView;
-    }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFileManagerFragmentInteractionListener) {
-            fileManagerFragmentListener = (OnFileManagerFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFileManagerFragmentInteractionListener");
+        int externalStoragePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+        if(externalStoragePermission == PackageManager.PERMISSION_GRANTED) {
+            updateDirectoryContents();
+        } else  {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
         }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        fileManagerFragmentListener = null;
+        return rootView;
     }
 
     @Override
@@ -103,7 +96,7 @@ public class FileManagerFragment extends Fragment {
             case PERMISSION_REQUEST_READ_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    retrieveDirectoryContents();
+                    updateDirectoryContents();
                     fileItemAdapter.notifyDataSetChanged();
                 }
                 return;
@@ -111,13 +104,14 @@ public class FileManagerFragment extends Fragment {
         }
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (fileManagerFragmentListener != null) {
-            fileManagerFragmentListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onClickFile() {
+        Toast.makeText(getContext(),"File clicked",Toast.LENGTH_LONG).show();
     }
 
-    public interface OnFileManagerFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void onClickDirectory() {
+        updateDirectoryContents();
+        fileItemAdapter.notifyDataSetChanged();
     }
 }
