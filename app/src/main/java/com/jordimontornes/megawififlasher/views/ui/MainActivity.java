@@ -8,10 +8,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.jordimontornes.megawififlasher.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RomDialogFragment.RomDialogFragmentInterface{
 
     private BottomNavigationView navigationBottomBar;
 
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-
         // uncheck the other items.
         for (int i = 0; i < navigationBottomBar.getMenu().size(); i++) {
             MenuItem menuItem = navigationBottomBar.getMenu().getItem(i);
@@ -75,6 +75,16 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setTitle(text);
         }
+    }
+
+    @Override
+    public void onYesRomClick() {
+        Toast.makeText(getBaseContext(), "Let's go!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNoRomClick() {
+        Toast.makeText(getBaseContext(), "ohhhh!", Toast.LENGTH_LONG).show();
     }
 
 }

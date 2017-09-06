@@ -2,7 +2,8 @@
     <string name="app_name">megawififlasher</string>
     <string name="title_file_manager">Rom File Manager</string>
     <string name="title_settings">Settings</string>
+    <string name="dialog_sega_rom">Do you want to use this Sega Genesis Rom File?</string>
 
-    <string name="file_manager_fragment">Hello file manager fragment</string>
-    <string name="settings_fragment">Hello settings fragment</string>
+    <string name="common_yes">Yes</string>
+    <string name="common_no">No</string>
 </resources>

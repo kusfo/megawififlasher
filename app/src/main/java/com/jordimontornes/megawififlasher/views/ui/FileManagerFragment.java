@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jordimontornes.megawififlasher.R;
@@ -19,11 +20,19 @@ import com.jordimontornes.megawififlasher.views.viewholder.FileItemData;
 
 import java.util.Arrays;
 
-public class FileManagerFragment extends Fragment  implements FileManagerListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class FileManagerFragment extends Fragment implements FileManagerListener {
 
     private static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 1;
 
+    @BindView(R.id.filepath_view)
+    TextView filePathView;
+
+    @BindView(R.id.recycler_view)
     RecyclerView fileRecyclerView;
+
     FileItemAdapter fileItemAdapter;
     RecyclerView.LayoutManager layoutManager;
     FileManagerPresenter presenter;
@@ -32,7 +41,6 @@ public class FileManagerFragment extends Fragment  implements FileManagerListene
     public FileManagerFragment() {
         presenter = new FileManagerPresenter(new DirectoryContentProvider());
     }
-
 
     public static FileManagerFragment newInstance() {
         return new FileManagerFragment();
@@ -58,7 +66,7 @@ public class FileManagerFragment extends Fragment  implements FileManagerListene
 
     private void initDataSet() {
         fileItemDataArray = new FileItemData[1];
-        fileItemDataArray[0] = new FileItemData("Empty List", "/" ,false);
+        fileItemDataArray[0] = new FileItemData("Empty List", "/", false);
     }
 
     private void updateDirectoryContents() {
@@ -71,18 +79,20 @@ public class FileManagerFragment extends Fragment  implements FileManagerListene
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_file_manager, container, false);
 
-        fileRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        ButterKnife.bind(this, rootView);
+
         fileItemAdapter = new FileItemAdapter(presenter);
+        filePathView.setText("/sdcard/");
         layoutManager = new LinearLayoutManager(getActivity());
 
         fileRecyclerView.setLayoutManager(layoutManager);
         fileRecyclerView.setAdapter(fileItemAdapter);
 
         int externalStoragePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
-        if(externalStoragePermission == PackageManager.PERMISSION_GRANTED) {
+        if (externalStoragePermission == PackageManager.PERMISSION_GRANTED) {
             updateDirectoryContents();
-        } else  {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+        } else {
+            requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
         }
 
@@ -106,12 +116,12 @@ public class FileManagerFragment extends Fragment  implements FileManagerListene
 
     @Override
     public void onClickCommonFile() {
-        Toast.makeText(getContext(),"File is not a Sega Genesis/Megadrive Rom!",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "File is not a Sega Genesis/Megadrive Rom!", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onClickSegaFile() {
-        Toast.makeText(getContext(),"File is a Sega Genesis/Megadrive Rom!",Toast.LENGTH_LONG).show();
+        new RomDialogFragment().show(getFragmentManager(), "RomDialogFragment");
     }
 
     @Override
@@ -119,4 +129,10 @@ public class FileManagerFragment extends Fragment  implements FileManagerListene
         updateDirectoryContents();
         fileItemAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void setDirectoryPath(String fullPath) {
+        filePathView.setText(fullPath);
+    }
+
 }

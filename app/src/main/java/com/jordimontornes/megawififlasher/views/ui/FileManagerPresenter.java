@@ -29,7 +29,7 @@ public class FileManagerPresenter {
         if (fileManagerListener != null) {
             if (fileItemData.isDirectory()) {
                 directoryContentProvider.updateCurrentDir(fullPath);
-
+                fileManagerListener.setDirectoryPath(fullPath);
                 fileManagerListener.onClickDirectory();
             } else {
                 if(fileItemData.isSegaRom()) {
