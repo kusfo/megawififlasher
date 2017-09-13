@@ -14,11 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jordimontornes.megawififlasher.R;
-import com.jordimontornes.megawififlasher.domain.DirectoryContentProvider;
+import com.jordimontornes.megawififlasher.domain.FileContentProvider;
 import com.jordimontornes.megawififlasher.views.viewholder.FileItemAdapter;
 import com.jordimontornes.megawififlasher.views.viewholder.FileItemData;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +40,7 @@ public class FileManagerFragment extends Fragment implements FileManagerListener
     private FileItemData[] fileItemDataArray;
 
     public FileManagerFragment() {
-        presenter = new FileManagerPresenter(new DirectoryContentProvider());
+        presenter = new FileManagerPresenter(new FileContentProvider());
     }
 
     public static FileManagerFragment newInstance() {
@@ -120,8 +121,10 @@ public class FileManagerFragment extends Fragment implements FileManagerListener
     }
 
     @Override
-    public void onClickSegaFile() {
-        new RomDialogFragment().show(getFragmentManager(), "RomDialogFragment");
+    public void onClickSegaFile(Map<String, String> filedata) {
+        RomDialogFragment romDialogFragment = new RomDialogFragment();
+        romDialogFragment.show(getFragmentManager(), "RomDialogFragment");
+        romDialogFragment.setRomFileData(filedata);
     }
 
     @Override

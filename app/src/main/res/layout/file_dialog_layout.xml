@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="1">
+    <TableRow>
+        <TextView
+            android:text="@string/dialog_rom_name"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/rom_name"
+            android:gravity="right"
+            android:padding="3dip" />
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:text="@string/dialog_rom_size"
+            android:padding="3dip" />
+        <TextView
+            android:id="@+id/rom_size"
+            android:gravity="right"
+            android:padding="3dip" />
+    </TableRow>
+</TableLayout>

@@ -1,6 +1,6 @@
 package com.jordimontornes.megawififlasher.views.ui;
 
-import com.jordimontornes.megawififlasher.domain.DirectoryContentProvider;
+import com.jordimontornes.megawififlasher.domain.FileContentProvider;
 import com.jordimontornes.megawififlasher.views.viewholder.FileItemData;
 
 /**
@@ -9,11 +9,11 @@ import com.jordimontornes.megawififlasher.views.viewholder.FileItemData;
 
 public class FileManagerPresenter {
 
-    private final DirectoryContentProvider directoryContentProvider;
+    private final FileContentProvider fileContentProvider;
     private FileManagerListener fileManagerListener;
 
-    public FileManagerPresenter(DirectoryContentProvider directoryContentProvider) {
-        this.directoryContentProvider = directoryContentProvider;
+    public FileManagerPresenter(FileContentProvider fileContentProvider) {
+        this.fileContentProvider = fileContentProvider;
     }
 
     public void attachView(FileManagerListener fileManagerListener) {
@@ -28,12 +28,12 @@ public class FileManagerPresenter {
         String fullPath = fileItemData.getFullPath();
         if (fileManagerListener != null) {
             if (fileItemData.isDirectory()) {
-                directoryContentProvider.updateCurrentDir(fullPath);
+                fileContentProvider.updateCurrentDir(fullPath);
                 fileManagerListener.setDirectoryPath(fullPath);
                 fileManagerListener.onClickDirectory();
             } else {
                 if(fileItemData.isSegaRom()) {
-                    fileManagerListener.onClickSegaFile();
+                    fileManagerListener.onClickSegaFile(fileContentProvider.getFileData(fileItemData.getName()));
                 } else {
                     fileManagerListener.onClickCommonFile();
                 }
@@ -42,6 +42,6 @@ public class FileManagerPresenter {
     }
 
     public FileItemData[] retrieveDirectoryContents() {
-        return directoryContentProvider.getContents();
+        return fileContentProvider.getDirContents();
     }
 }

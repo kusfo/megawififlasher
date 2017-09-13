@@ -40,7 +40,7 @@ public class FileItemData {
     }
 
     public String getFullPath() {
-        return path + "/" + name;
+        return name.equals("..") ? path : path + "/" + name;
     }
 
     public boolean isSegaRom() {
